@@ -5,13 +5,41 @@
 
 # Reporting
 
-## Load Libraries and Data
+In this walkthrough, I discuss weekly reporting using (hypothetical) data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
 
-You can export data from your Asana project as a CSV file (following the clicks below).
+1. Export Data and Load
+2. Tasks Completed
+3. Team Allocation
+4. Uncompleted Tasks
+
+## Export Data and Load
+
+You can export data from your Asana project as a CSV file following the clicks below. Any custom tags you create will also show up in this data extract. Fields include:
+
+- Unique task ID
+- Date task was created
+- Task completion date (empty cell = open task)
+- Task description
+- Section/column task was organized underneath
+- Task assignee
+- Due date
+- Project
+- (Custom field) Effort level
+- (Custom field) Workstream
 
 <p align="center">
-  <img src="https://github.com/mattgerken/asana-tracking/blob/main/pics/export.png?raw=true" width="80%">
+  <img src="https://github.com/mattgerken/asana-tracking/blob/main/pics/export.PNG?raw=true" width="40%">
 </p>
+
+In creating our team's Agile norms, we decided not to add meetings as tasks in Asana, since that would have been a laborious undertaking. Alternatively, I tracked each team member's time spent in meetings in a separate Excel spreadsheet using their Outlook calendars ("meetings" included work meetings, sick leave, vacation time, and other appointments).
+
+Reporting starts by loading both the Asana data extract and meetings spreadsheet into R. For the sake of this walkthrough, I created fake data for a hypothetical team with the following characteristics:
+
+- 5 team members
+- 5 workstreams with meeting time tracked separately
+- Current week of March 11th - 15th
+
+The custom **"Effort level"** field tracked level of effort (in hours) for each task. I converted these into points using the conversion **1 hour = 0.5 points**.
 
 ```{r}
 # load libraries
@@ -66,8 +94,15 @@ meeting_time <- read.xlsx("meeting tracking.xlsx",
   select(-hours)
 ```
 
-
 ## Tasks Completed
+
+Every Friday during team Retro, we would reflect on tasks completed and total meeting time over the past work week. I would visualize level of effort across the team by workstream. Since 1 hour = 0.5 points, 20 points is the equivalent of a 40-hr workweek. 
+
+Using the fake data I created for the sake of this walkthrough, the visual reveals that during the week of March 11th - 15th:
+
+- Team members contributed the most to workstreams 1 and 4
+- Team members 1 and 2 spent the most time in meetings
+
 ```{r2}
 # this week's meetings
 this_week_meeting <- meeting_time %>%
@@ -122,6 +157,11 @@ this_week %>%
 </p>
 
 ## Team Allocation
+
+You can also consider total team allocation for the week; that is, all tasks assigned (both completed tasks and tasks that had not been completed as of Friday Team Retro) plus meeting time. I would calculate total points (using 1 hour = 0.5 points) for each team member and then divide by 20 (20 points = 40 hours a week) to determine each team member's allocation percentage for the week. Tips for visualizing:
+
+- Make it fun! Use the **ggimage** package to assign team members avatars or profile pictures.
+- Use **geom_rect** to shade your visual into sections. I created a "Below Target" section (0%-75%), a "On Target" section (75%-100%), and an "Above Target" section (>100%) after consulting the team.
 
 ```{r3}
 # pull in this week's meeting time
@@ -181,6 +221,8 @@ this_week_all_tasks %>%
 
 ## Uncompleted Tasks
 
+Team Retro's on Friday's present an opportunity to discuss uncompleted tasks: any blockers and updated timelines. I would create a table listing all outstanding tasks for the week to facilitate that discussion.
+
 ```{r4}
 # all uncompleted tasks
 this_week_uncompleted <- asana %>%
@@ -205,5 +247,8 @@ knitr::kable(this_week_uncompleted, align = "c", booktabs = TRUE,
 <p align="center">
   <img src="https://github.com/mattgerken/asana-tracking/blob/main/uncompleted_this_week.png?raw=true" width="80%">
 </p>
+
+# Lessons Learned
+
 
 
