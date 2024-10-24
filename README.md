@@ -7,6 +7,12 @@
 
 ## Load Libraries and Data
 
+You can export data from your Asana project as a CSV file (following the clicks below).
+
+<p align="center">
+  <img src="https://github.com/mattgerken/asana-tracking/blob/main/pics/export.png?raw=true" width="80%">
+</p>
+
 ```{r}
 # load libraries
 library(tidyverse)
