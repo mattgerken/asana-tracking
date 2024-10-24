@@ -127,6 +127,7 @@ this_week_all_tasks <- asana %>%
                                 assignee == "Team Member 4" ~ "pics/star.png",
                                 assignee == "Team Member 5" ~ "pics/tree.png"))
 
+# create allocation figure
 this_week_all_tasks %>%
   arrange(desc(points)) %>%
   filter(!is.na(assignee)) %>%
@@ -158,11 +159,25 @@ this_week_all_tasks %>%
 
 ggsave("allocated_this_week.png", bg="white", height = 6, width = 8)
 
+#----- Current week (March 11-15) uncompleted tasks
 
+# all uncompleted tasks
+this_week_uncompleted <- asana %>%
+  filter(section_column == "Mar 11-15") %>%
+  # uncompleted tasks = missing completed_at date
+  filter(completed_at == "") %>%
+  select(assignee, workstream, effort_level, name, due_date) %>%
+  arrange(assignee, workstream, due_date) %>%
+  rename("Name" = 1,
+         "Workstream" = 2,
+         "Effort Level" = 3,
+         "Task" = 4,
+         "Due Date" = 5)
 
-
-
-
-
-
+# turn into table
+knitr::kable(this_week_uncompleted, align = "c", booktabs = TRUE,
+             caption = '<b>Tasks Yet to Be Completed for Week of March 11 - 15</b>', format = 'html') %>% 
+  kable_styling(font_size = 11, html_font = "Lato") %>%
+  save_kable(file = "uncompleted_this_week.png",
+             zoom = 1.5)
 
