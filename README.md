@@ -5,7 +5,7 @@
 
 # Reporting
 
-In this walkthrough, I discuss weekly reporting using (hypothetical) data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
+In this walkthrough, I discuss weekly reporting using (hypothetical) task-level data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
 
 1. Export Data and Load
 2. Tasks Completed
@@ -14,7 +14,7 @@ In this walkthrough, I discuss weekly reporting using (hypothetical) data export
 
 ## Export Data and Load
 
-You can export data from your Asana project as a CSV file following the clicks below. Any custom tags you create will also show up in this data extract. Fields include:
+You can export data from your Asana project as a CSV file following the clicks below. Any custom tags you create will also show up in this data extract (two examples below). Fields in my extract include:
 
 - Unique task ID
 - Date task was created
@@ -31,15 +31,15 @@ You can export data from your Asana project as a CSV file following the clicks b
   <img src="https://github.com/mattgerken/asana-tracking/blob/main/pics/export.PNG?raw=true" width="40%">
 </p>
 
-In creating our team's Agile norms, we decided not to add meetings as tasks in Asana, since that would have been a laborious undertaking. Alternatively, I tracked each team member's time spent in meetings in a separate Excel spreadsheet using their Outlook calendars ("meetings" included work meetings, sick leave, vacation time, and other appointments).
+In creating your team's Agile norms, decide how to treat meeting time. Meeting time could be added as "tasks" in Asana (a potentially laborious undertaking for everyone across the team). Alternatively, each team member's time spent in meetings can be tracked in a separate Excel spreadsheet (which I have done for this example) using Outlook calendars ("meetings" included work meetings, sick leave, vacation time, and other appointments) or other more direct methods.
 
 Reporting starts by loading both the Asana data extract and meetings spreadsheet into R. For the sake of this walkthrough, I created fake data for a hypothetical team with the following characteristics:
 
 - 5 team members
 - 5 workstreams with meeting time tracked separately
-- Current week of March 11th - 15th
+- Current week is March 11th - 15th
 
-The custom **"Effort level"** field tracked level of effort (in hours) for each task. I converted these into points using the conversion **1 hour = 0.5 points**.
+The custom **"Effort level"** field tracked level of effort (in hours) for each task. I converted these task-hours into points using the conversion **1 hour = 0.5 points**.
 
 ```{r}
 # load libraries
@@ -96,7 +96,7 @@ meeting_time <- read.xlsx("meeting tracking.xlsx",
 
 ## Tasks Completed
 
-Every Friday during team Retro, we would reflect on tasks completed and total meeting time over the past work week. I would visualize level of effort across the team by workstream. Since 1 hour = 0.5 points, 20 points is the equivalent of a 40-hr workweek. 
+The end of the work week provides an opportunity to reflect on tasks completed and total meeting time over the past work week, either formally through a practice like a **Team Retro** or informally through a report.  Level of effort can be visualized across the team by workstream through simple stacked bar charts. Since 1 hour = 0.5 points, 20 points is the equivalent of a 40-hr workweek. 
 
 Using the fake data I created for the sake of this walkthrough, the visual reveals that during the week of March 11th - 15th:
 
@@ -158,10 +158,10 @@ this_week %>%
 
 ## Team Allocation
 
-You can also consider total team allocation for the week; that is, all tasks assigned (both completed tasks and tasks that had not been completed as of Friday Team Retro) plus meeting time. I would calculate total points (using 1 hour = 0.5 points) for each team member and then divide by 20 (20 points = 40 hours a week) to determine each team member's allocation percentage for the week. Tips for visualizing:
+You can also consider total team allocation for the week; that is, all tasks assigned (both completed tasks and tasks that had not been completed as of the end of the week) plus meeting time. Tallying total points (using 1 hour = 0.5 points) for each team member and then dividing by 20 (20 points = 40 hours a week) creates each team member's allocation percentage for the week. Tips for visualizing:
 
 - Make it fun! Use the **ggimage** package to assign team members avatars or profile pictures.
-- Use **geom_rect** to shade your visual into sections. I created a "Below Target" section (0%-75%), a "On Target" section (75%-100%), and an "Above Target" section (>100%) after consulting the team.
+- Use **geom_rect** to shade your visual into sections. I created a "Below Target" section (0%-75%), an "On Target" section (75%-100%), and an "Above Target" section (>100%). These cutoffs can be determined with your team.
 
 ```{r3}
 # pull in this week's meeting time
@@ -221,7 +221,7 @@ this_week_all_tasks %>%
 
 ## Uncompleted Tasks
 
-Team Retro's on Friday's present an opportunity to discuss uncompleted tasks: any blockers and updated timelines. I would create a table listing all outstanding tasks for the week to facilitate that discussion.
+If reporting is built into a recurring end-of-week team meeting, like a Weekly Team Retro, there is an opportunity to review uncompleted tasks: task status updates, any blockers, and updated timelines. These outstanding tasks can be consolidated into a table to facilitate open team discussion.
 
 ```{r4}
 # all uncompleted tasks
