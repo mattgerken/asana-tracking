@@ -4,18 +4,30 @@ Are you a data analyst seeking to support your team's project management trackin
 
 # Agile Methodology
 
-[Agile methodology](https://asana.com/resources/agile-methodology) is a project management framework that is iterative and that breaks projects down into "sprints," or phases. A project management platform such as Asana pairs well with Agile methodology. In Asana, you can add tasks and assign them to team members, add the task's level of effort as a [custom field](https://help.asana.com/s/article/organize-projects-with-custom-fields) (e.g., 30 minutes to complete, 1 hour, 2 hours, etc.), and the project ("workstream") the task is associated with as a custom field. 
+[Agile methodology](https://asana.com/resources/agile-methodology) is a project management framework that is iterative and that breaks projects down into "sprints," or phases. Common Agile ceremonies include:
+
+- **Daily stand-up** for each team member to share progress on tasks, discuss their plans for the day, and any task blockers they are encountering
+- **Sprint planning** to meet as a team to discuss tasks and priorities for the next sprint
+- **Weekly retros** to reflect on the previous sprint (which can be scheduled at the end of the work week on a Friday)
+
+A project management platform such as Asana pairs well with Agile methodology. In Asana, you can add tasks and assign them to team members, add the task's level of effort as a [custom field](https://help.asana.com/s/article/organize-projects-with-custom-fields) (e.g., 30 minutes to complete, 1 hour, 2 hours, etc.), and the project ("workstream") the task is associated with as a custom field. 
 
 For a team engaged in multiple projects, there are many ways to set up an Asana board. One way is to add each work week as a column and organize tasks underneath those columns. 
 
-# Reporting
+<p align="center">
+  <img src="https://github.com/mattgerken/asana-tracking/blob/main/pics/asana.PNG?raw=true" width="80%">
+</p>
 
-In this walkthrough, I discuss weekly reporting in R using (hypothetical) task-level data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
+Level of effort can be assigned using units of time (e.g., 30 minutes, 1 hour, 2 hours, 3 hours, etc.), which I do in this example, or using a different methodology, such as [story points](https://www.simplilearn.com/story-points-in-agile-article).
 
-1. Export Data and Load
-2. Tasks Completed
-3. Team Allocation
-4. Uncompleted Tasks
+# Reporting in R
+
+Below, I discuss weekly reporting in R using (hypothetical) task-level data exported from Asana to inform team project management. Such a report could time well with the weekly retro, providing the team an opportunity to reflect on, for example:
+
+1. Tasks Completed
+2. Team Allocation
+3. Uncompleted Tasks
+4. Workstreams Over Time
 
 ## Export Data and Load
 
@@ -250,6 +262,9 @@ knitr::kable(this_week_uncompleted, align = "c", booktabs = TRUE,
 <p align="center">
   <img src="https://github.com/mattgerken/asana-tracking/blob/main/uncompleted_this_week.png?raw=true" width="80%">
 </p>
+
+## Workstreams Over Time
+
 
 # Lessons Learned
 
