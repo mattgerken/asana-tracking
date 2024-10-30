@@ -190,57 +190,37 @@ meeting_time_by_week <- meeting_time %>%
   summarize(points = sum(points)) %>%
   ungroup()
 
-
+# change over time data manipulation
 change_over_time <- asana %>%
-  # AYO: add this week's data range as it appears in Asana to the list below
-  filter(section_column %in% c("Dec 18-22", "Dec 25-29", "Jan 1-5", "Jan 8-12", "Jan 15-19",
-                               "Jan 22-26", "Jan 29- Feb 2", "Feb 5-9", "Feb 12-16", "Feb 19-23",
-                               "Feb 26- March 1", "March 4-8", "Mar 11-15", "Mar 18-22", "Mar 25-29")) %>%
+  filter(section_column %in% c("Mar 11-15", "Mar 18-22")) %>%
   filter(!is.na(completed_at) & completed_at != "") %>%
   group_by(section_column, workstream) %>%
   summarize(points = sum(points, na.rm = TRUE)) %>%
   ungroup() %>%
   rbind(meeting_time_by_week) %>%
-  filter(workstream != "Other" & workstream != "") %>%
+  filter(workstream != "") %>%
   mutate(section_column = factor(section_column, 
-                                 # AYO: make sure to add that new week here too 
-                                 levels = c("Dec 18-22", "Dec 25-29", "Jan 1-5", "Jan 8-12", "Jan 15-19",
-                                            "Jan 22-26", "Jan 29- Feb 2", "Feb 5-9", "Feb 12-16", "Feb 19-23", "Feb 26- March 1", "March 4-8", "Mar 11-15",
-                                            "Mar 18-22", "Mar 25-29")))
+                                 levels = c("Mar 11-15", "Mar 18-22")))
 
-overall <- change_over_time %>%
+# line plot
+change_over_time %>%
   ggplot(aes(x = as.numeric(section_column), y = points, color = workstream)) +
   geom_line(size = 1) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.002)),
-                     breaks = 0:7 * 10,
-                     limits = c(0, 70)) +
+                     breaks = 0:5 * 10,
+                     limits = c(0, 50)) +
   # AYO: add next week's date range here as well
-  scale_x_continuous(labels = c("1" = "Dec\n18-22",
-                                "2" = "Dec\n25-29",
-                                "3" = "Jan\n1-5",
-                                "4" = "Jan\n8-12",
-                                "5" = "Jan\n15-19",
-                                "6" = "Jan\n22-26",
-                                "7" = "Jan\n29- Feb 2",
-                                "8" = "Feb\n5-9",
-                                "9" = "Feb\n12-16",
-                                "10" = "Feb\n19-23",
-                                "11" = "Feb\n26- Mar 1", 
-                                "12" = "Mar\n4-8",
-                                "13" = "Mar\n11-15",
-                                "14" = "Mar\n18-22",
-                                "15" = "Mar\n25-29"),
-                     # AYO: update the breaks 
-                     breaks = 1:15 * 1) +
+  scale_x_continuous(labels = c("1" = "Mar\n11-15",
+                                "2" = "Mar\n18-22"),
+                     breaks = 1:2 * 1) +
   labs(x = NULL,
        y = "Total points across team members",
-       caption = bquote(bold("Note:")~"Tasks with a missing level of effort were assigned 0.5 points")) + 
+       caption = paste0("**Note:** 1 hour = 0.5 points. Tasks with a missing level of effort were assigned 0.25 points.")) + 
   theme(legend.box = "vertical", legend.position = "right",
         legend.direction = "vertical",
-        plot.caption = element_text(hjust = 0)) + 
+        plot.caption = element_markdown(hjust = 0, size = 8),
+        plot.title = element_markdown(size = 12),
+        plot.subtitle = element_markdown(size = 9)) + 
   ggtitle("Total Points Completed by Week and Workstream")
 
-
-
-
-
+ggsave("change_over_time.png", bg="white", height = 6, width = 8)
