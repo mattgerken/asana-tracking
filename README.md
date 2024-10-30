@@ -1,11 +1,16 @@
-<h1 align="center"> Project Management Reporting Following Agile Methodology </h1>
+<h1 align="center"> Project Management Reporting in R Following Agile Methodology </h1>
 
-# Asana and Agile Methodology
+Are you a data analyst seeking to support your team's project management tracking? The following guide provides a walkthrough for taking tasks from a project management platform (in this example, Asana) and creating a report for your team using R.
 
+# Agile Methodology
+
+[Agile methodology](https://asana.com/resources/agile-methodology) is a project management framework that is iterative and that breaks projects down into "sprints," or phases. A project management platform such as Asana pairs well with Agile methodology. In Asana, you can add tasks and assign them to team members, add the task's level of effort as a [custom field](https://help.asana.com/s/article/organize-projects-with-custom-fields) (e.g., 30 minutes to complete, 1 hour, 2 hours, etc.), and the project ("workstream") the task is associated with as a custom field. 
+
+For a team engaged in multiple projects, there are many ways to set up an Asana board. One way is to add each work week as a column and organize tasks underneath those columns. 
 
 # Reporting
 
-In this walkthrough, I discuss weekly reporting using (hypothetical) task-level data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
+In this walkthrough, I discuss weekly reporting in R using (hypothetical) task-level data exported from Asana to inform team project management, following Agile methodologies. The walkthrough is organized into the following sections:
 
 1. Export Data and Load
 2. Tasks Completed
@@ -23,7 +28,6 @@ You can export data from your Asana project as a CSV file following the clicks b
 - Section/column task was organized underneath
 - Task assignee
 - Due date
-- Project
 - (Custom field) Effort level
 - (Custom field) Workstream
 
@@ -37,7 +41,6 @@ Reporting starts by loading both the Asana data extract and meetings spreadsheet
 
 - 5 team members
 - 5 workstreams with meeting time tracked separately
-- Current week is March 11th - 15th
 
 The custom **"Effort level"** field tracked level of effort (in hours) for each task. I converted these task-hours into points using the conversion **1 hour = 0.5 points**.
 
