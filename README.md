@@ -265,8 +265,59 @@ knitr::kable(this_week_uncompleted, align = "c", booktabs = TRUE,
 
 ## Workstreams Over Time
 
+You can also track changes in team prioritization of your workstreams over time (and if desired, a separate breakout for each team member). This line plot is helpful in visualizing which workstreams are most involved and in informing sprint planning for future sprints. Using my hypothetical data, the line plot shows:
 
-# Lessons Learned
+- Meeting time dropped across the team from March 11-15 to March 18-22
+- Workstream 2 saw a slight increase in total time spent across the team whereas other workstreams dropped
 
+```{r5}
+
+# add up meeting time
+meeting_time_by_week <- meeting_time %>%
+  group_by(section_column, workstream) %>%
+  summarize(points = sum(points)) %>%
+  ungroup()
+
+# change over time data manipulation
+change_over_time <- asana %>%
+  filter(section_column %in% c("Mar 11-15", "Mar 18-22")) %>%
+  filter(!is.na(completed_at) & completed_at != "") %>%
+  group_by(section_column, workstream) %>%
+  summarize(points = sum(points, na.rm = TRUE)) %>%
+  ungroup() %>%
+  rbind(meeting_time_by_week) %>%
+  filter(workstream != "") %>%
+  mutate(section_column = factor(section_column, 
+                                 levels = c("Mar 11-15", "Mar 18-22")))
+
+# line plot
+change_over_time %>%
+  ggplot(aes(x = as.numeric(section_column), y = points, color = workstream)) +
+  geom_line(size = 1) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.002)),
+                     breaks = 0:5 * 10,
+                     limits = c(0, 50)) +
+  # AYO: add next week's date range here as well
+  scale_x_continuous(labels = c("1" = "Mar\n11-15",
+                                "2" = "Mar\n18-22"),
+                     breaks = 1:2 * 1) +
+  labs(x = NULL,
+       y = "Total points across team members",
+       caption = paste0("**Note:** 1 hour = 0.5 points. Tasks with a missing level of effort were assigned 0.25 points.")) + 
+  theme(legend.box = "vertical", legend.position = "right",
+        legend.direction = "vertical",
+        plot.caption = element_markdown(hjust = 0, size = 8),
+        plot.title = element_markdown(size = 12),
+        plot.subtitle = element_markdown(size = 9)) + 
+  ggtitle("Total Points Completed by Week and Workstream")
+
+```
+<p align="center">
+  <img src="https://github.com/mattgerken/asana-tracking/blob/main/change_over_time.png?raw=true" width="80%">
+</p>
+
+# Summary
+
+Agile methodology is a powerful project management practice; layering data reporting on top helps ensure sprint planning and conversations about allocation of work across the team and where to prioritize time across multiple workstreams are data-driven. Data visualization that shows completion of tasks, team allocation across multiple projects or workstreams, any tasks yet to be completed, and changes in workstream prioritization over time are helpful in informing those conversations.
 
 
